@@ -2,6 +2,8 @@
 
 This repository contains the data from Professor John Kim's trip down the Mississippi River. 
 
+Data was collected between 2019-08-30 and 2019-11-21 on five distinct sections of the Mississippi. One near Bemidji, one near Rochester, one South of St. Louis, one south of Cape Girardeau, and one near New Orleans.
+
 ### Exploratory Visualization
 
 A web map allowing data to be easily explored can be found at https://grahamammal.shinyapps.io/miss_explore/ The time each data point was recorded can be found by clicking on it. 
