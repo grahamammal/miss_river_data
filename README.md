@@ -12,7 +12,7 @@ A web map allowing data to be easily explored can be found at https://grahamamma
 
 `clean_legs_non_geom.csv` contains cleaned data in a tabular format. 
 
-`clean_legs/clean_legs_geom.shp` is a shapefile containg the same data with each row classed as a point feature. Attribute names are slightly differnt because writing methods allows only 7 character names. 
+`clean_legs/clean_legs_geom.shp` is a shapefile containg the same data with each row classed as a point feature. Attribute names are slightly different because writing methods allow only 7 character names. 
 
 ### Data Cleaning
 
