@@ -1,0 +1,78 @@
+---
+title: "miss data highlights"
+author: "Ellen Graham"
+date: "5/3/2020"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(ggridges)
+```
+
+```{r}
+all_legs <- read_csv("all_legs_non_median.csv")
+all_legs_median <- read_csv("all_legs_median.csv")
+```
+
+### Total data points
+```{r}
+dim(all_legs)
+head(all_legs)
+head(all_legs_median)
+dim(all_legs_median)
+```
+
+145366 observations, each with 19 variables, 25260 observations after taking median of 15 second chunks
+
+
+### Average per minute
+```{r}
+all_legs %>% 
+  mutate(num_in_minute = (time_in_sec%/%60)*60) %>% 
+  group_by(num_in_minute) %>% 
+  count() %>% 
+  pull(n)  %>% 
+  mean()
+```
+
+On average, 22.13 observations are taken every second.
+
+### Biggest Elevation Change in a Day
+
+(using all legs median)
+```{r}
+all_legs_median %>% 
+  mutate(date = as_date(date_time)) %>% 
+  ggplot(aes(x = alt, y = as.character(date), height = stat(density))) + 
+  geom_density_ridges(stat = "binline", binwidth = 10, scale = 0.95, draw_baseline = FALSE)
+ 
+all_legs_median %>% 
+  mutate(date = as_date(date_time)) %>% 
+  group_by(date) %>% 
+  filter(alt > quantile(alt, 0.05), alt < quantile(alt, 0.95)) %>% 
+  summarise(min_alt = min(alt), max_alt = max(alt), count = n()) %>% 
+  mutate(change = max_alt-min_alt) %>% 
+  arrange(desc(change))
+```
+
+Looks like 37.90 on 2019-08-30 is the largest real drop, although I know they drove on that day. Very difficult to tell
+
+
+### Biggest VOC change in a day
+
+```{r}
+all_legs_median %>% 
+  mutate(date = as_date(date_time)) %>% 
+  group_by(date) %>% 
+  filter(air_gas > quantile(air_gas, 0.05, na.rm = TRUE), air_gas < quantile(air_gas, 0.95,  na.rm = TRUE)) %>% 
+  summarise(min_gas = min(air_gas), max_gas = max(air_gas), count = n()) %>% 
+  mutate(change = max_gas-min_gas) %>% 
+  arrange(desc(change))
+```
+
+Looks like the biggest "real" drop on a day with a reasonable amount of data is on 2019-11-21, with a drop of 1250505
